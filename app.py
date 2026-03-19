@@ -327,7 +327,187 @@ def product_detail(product_id):
 def cart():
     """Shopping cart page"""
     cart_items = session.get('cart', [])
-    return jsonify({'cart': cart_items, 'count': len(cart_items)})
+    
+    # Calculate total
+    total = sum(float(item.get('price', 0)) * int(item.get('quantity', 1)) for item in cart_items)
+    
+    html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - ToothSnap</title>
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{ 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            padding: 20px; 
+        }}
+        .container {{ max-width: 1000px; margin: 0 auto; }}
+        .back-btn {{
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }}
+        .cart-container {{
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }}
+        .cart-header {{
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 30px;
+        }}
+        .empty-cart {{
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }}
+        .empty-cart h2 {{
+            font-size: 2em;
+            margin-bottom: 20px;
+        }}
+        .continue-shopping {{
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+        }}
+        .cart-item {{
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            align-items: center;
+        }}
+        .cart-item:last-child {{
+            border-bottom: none;
+        }}
+        .item-image {{
+            width: 100%;
+            border-radius: 10px;
+        }}
+        .item-details h3 {{
+            color: #333;
+            margin-bottom: 10px;
+        }}
+        .item-details p {{
+            color: #666;
+            margin-bottom: 5px;
+        }}
+        .item-price {{
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }}
+        .cart-summary {{
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 3px solid #667eea;
+        }}
+        .summary-row {{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }}
+        .summary-total {{
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }}
+        .checkout-btn {{
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }}
+        .checkout-btn:hover {{
+            transform: scale(1.02);
+        }}
+        @media (max-width: 768px) {{
+            .cart-item {{
+                grid-template-columns: 80px 1fr;
+            }}
+            .item-price {{
+                grid-column: 2;
+                text-align: right;
+                margin-top: 10px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Continue Shopping</a>
+        <div class="cart-container">
+            <h1 class="cart-header">🛒 Shopping Cart</h1>'''
+    
+    if not cart_items:
+        html += '''
+            <div class="empty-cart">
+                <h2>Your cart is empty</h2>
+                <p>Add some great dental products to get started!</p>
+                <a href="/" class="continue-shopping">Browse Products</a>
+            </div>'''
+    else:
+        # Show cart items
+        for item in cart_items:
+            item_total = float(item.get('price', 0)) * int(item.get('quantity', 1))
+            html += f'''
+            <div class="cart-item">
+                <img src="{item.get('image', '')}" alt="{item.get('title', 'Product')}" class="item-image">
+                <div class="item-details">
+                    <h3>{item.get('title', 'Product')}</h3>
+                    <p>Quantity: {item.get('quantity', 1)}</p>
+                    <p>Price: ${item.get('price', '0.00')} each</p>
+                </div>
+                <div class="item-price">${item_total:.2f}</div>
+            </div>'''
+        
+        # Cart summary
+        html += f'''
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal ({len(cart_items)} items):</span>
+                    <span>${total:.2f}</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total:</span>
+                    <span>${total:.2f}</span>
+                </div>
+                <button class="checkout-btn" onclick="window.location='/checkout'">
+                    Proceed to Checkout →
+                </button>
+            </div>'''
+    
+    html += '''
+        </div>
+    </div>
+</body>
+</html>'''
+    return html
 
 @app.route('/cart/add', methods=['POST'])
 def add_to_cart():
