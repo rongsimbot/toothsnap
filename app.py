@@ -529,22 +529,65 @@ def checkout():
     cart_params = ','.join([f"{v}:{q}" for v, q in zip(variant_ids, quantities)])
     return redirect(f"https://{SHOPIFY_STORE_URL}/cart/{cart_params}")
 
-if __name__ == '__main__':
-    port = int(os.getenv('PORT', 8080))
 
-@app.route('/products-json')
-def products_json():
-    """JSON endpoint for products (used by JavaScript)"""
-    cache_key = 'products_data'
-    if cache_key in _cache and time.time() - _cache.get('products_cache_time', 0) < 300:
-        products_data = _cache[cache_key]
-    else:
-        data = call_shopify_api('products.json?limit=250')
-        products_data = data.get('products', [])
-        _cache[cache_key] = products_data
-        _cache['products_cache_time'] = time.time()
+# ========== ERROR HANDLERS ==========
+
+@app.errorhandler(404)
+def not_found(error):
+    """404 error handler"""
+    return '''<!DOCTYPE html>
+<html><head><title>Page Not Found - ToothSnap</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .error-container { background: white; border-radius: 20px; padding: 60px 40px; text-align: center; max-width: 600px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    h1 { font-size: 6em; color: #667eea; margin-bottom: 20px; }
+    h2 { font-size: 2em; color: #333; margin-bottom: 20px; }
+    p { color: #666; font-size: 1.2em; margin-bottom: 30px; }
+    a { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+</style></head><body>
+<div class="error-container">
+    <h1>404</h1>
+    <h2>Page Not Found</h2>
+    <p>Sorry, the page you're looking for doesn't exist.</p>
+    <a href="/">← Back to Home</a>
+</div></body></html>''', 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    """500 error handler"""
+    return '''<!DOCTYPE html>
+<html><head><title>Server Error - ToothSnap</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .error-container { background: white; border-radius: 20px; padding: 60px 40px; text-align: center; max-width: 600px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    h1 { font-size: 6em; color: #ff5252; margin-bottom: 20px; }
+    h2 { font-size: 2em; color: #333; margin-bottom: 20px; }
+    p { color: #666; font-size: 1.2em; margin-bottom: 30px; }
+    a { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 40px; border-radius: 10px; text-decoration: none; font-weight: 600; }
+</style></head><body>
+<div class="error-container">
+    <h1>500</h1>
+    <h2>Something Went Wrong</h2>
+    <p>We're experiencing technical difficulties. Please try again later.</p>
+    <a href="/">← Back to Home</a>
+</div></body></html>''', 500
+
+# ========== SECURITY & PERFORMANCE HEADERS ==========
+
+@app.after_request
+def add_security_headers(response):
+    """Add security and caching headers"""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
     
-    return jsonify(products_data)
+    # Cache static assets
+    if request.path.endswith(('.css', '.js', '.jpg', '.jpeg', '.png', '.gif', '.ico')):
+        response.headers['Cache-Control'] = 'public, max-age=3600'
+    
+    return response
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8080))

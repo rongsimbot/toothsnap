@@ -30,7 +30,6 @@
             opacity: 0.9; 
         }
         
-        /* Tab Navigation */
         .tabs {
             display: flex;
             justify-content: center;
@@ -57,7 +56,6 @@
             color: #667eea;
         }
         
-        /* Tab Content */
         .tab-content {
             display: none;
         }
@@ -65,7 +63,6 @@
             display: block;
         }
         
-        /* Dentist Search Card */
         .search-card { 
             background: white; 
             border-radius: 20px; 
@@ -113,7 +110,6 @@
             transform: scale(1.02); 
         }
         
-        /* Product Grid */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -126,6 +122,7 @@
             padding: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: transform 0.2s;
+            cursor: pointer;
         }
         .product-card:hover {
             transform: translateY(-5px);
@@ -137,6 +134,7 @@
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 15px;
+            background: #f0f0f0;
         }
         .product-title {
             color: #333;
@@ -175,6 +173,23 @@
             font-size: 1.5em;
             padding: 50px;
         }
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(3, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        .error-message {
+            background: #ff5252;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
         
         @media (max-width: 768px) {
             .header h1 { font-size: 2em; }
@@ -196,7 +211,6 @@
             <button class="tab-btn" onclick="showTab('products')">🛒 Shop Products</button>
         </div>
         
-        <!-- Dentist Search Tab -->
         <div id="dentists-tab" class="tab-content active">
             <div class="search-card">
                 <h2>Find Your Perfect Dentist</h2>
@@ -231,11 +245,11 @@
             </div>
         </div>
         
-        <!-- Products Tab -->
         <div id="products-tab" class="tab-content">
             <div class="search-card">
                 <h2>Dental Products</h2>
-                <div id="product-loading" class="loading">Loading products...</div>
+                <div id="product-loading" class="loading">Loading products</div>
+                <div id="product-error" class="error-message" style="display: none;"></div>
                 <div id="product-grid" class="product-grid" style="display: none;"></div>
             </div>
         </div>
@@ -243,7 +257,6 @@
     
     <script>
         function showTab(tabName) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -251,11 +264,9 @@
                 btn.classList.remove('active');
             });
             
-            // Show selected tab
             document.getElementById(tabName + '-tab').classList.add('active');
             event.target.classList.add('active');
             
-            // Load products if products tab is selected
             if (tabName === 'products' && !window.productsLoaded) {
                 loadProducts();
             }
@@ -263,34 +274,48 @@
         
         function loadProducts() {
             window.productsLoaded = true;
+            const loading = document.getElementById('product-loading');
+            const error = document.getElementById('product-error');
+            const grid = document.getElementById('product-grid');
+            
             fetch('/products-json')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to load products');
+                    return response.json();
+                })
                 .then(products => {
-                    const grid = document.getElementById('product-grid');
-                    const loading = document.getElementById('product-loading');
-                    
                     loading.style.display = 'none';
+                    error.style.display = 'none';
                     grid.style.display = 'grid';
+                    
+                    if (products.length === 0) {
+                        error.textContent = 'No products available at this time.';
+                        error.style.display = 'block';
+                        return;
+                    }
                     
                     products.forEach(product => {
                         const card = document.createElement('div');
                         card.className = 'product-card';
+                        card.onclick = () => window.location = '/product/' + product.id;
                         
                         const imageUrl = product.images && product.images[0] ? product.images[0].src : 'https://via.placeholder.com/280x200?text=No+Image';
                         const price = product.variants && product.variants[0] ? product.variants[0].price : '0.00';
                         
                         card.innerHTML = `
-                            <img src="${imageUrl}" alt="${product.title}" class="product-image">
+                            <img src="${imageUrl}" alt="${product.title}" class="product-image" onerror="this.src='https://via.placeholder.com/280x200?text=Image+Not+Available'">
                             <div class="product-title">${product.title}</div>
                             <div class="product-price">$${price}</div>
-                            <button class="view-product-btn" onclick="window.location='/product/${product.id}'">View Details</button>
+                            <button class="view-product-btn" onclick="event.stopPropagation(); window.location='/product/${product.id}'">View Details</button>
                         `;
                         
                         grid.appendChild(card);
                     });
                 })
                 .catch(error => {
-                    document.getElementById('product-loading').textContent = 'Error loading products. Please try again.';
+                    loading.style.display = 'none';
+                    document.getElementById('product-error').textContent = 'Unable to load products. Please try again later.';
+                    document.getElementById('product-error').style.display = 'block';
                     console.error('Error:', error);
                 });
         }
