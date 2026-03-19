@@ -532,6 +532,21 @@ def checkout():
 
 # ========== ERROR HANDLERS ==========
 
+
+@app.route('/products-json')
+def products_json():
+    """JSON endpoint for products (used by JavaScript)"""
+    cache_key = 'products_data'
+    if cache_key in _cache and time.time() - _cache.get('products_cache_time', 0) < 300:
+        products_data = _cache[cache_key]
+    else:
+        data = call_shopify_api('products.json?limit=250')
+        products_data = data.get('products', [])
+        _cache[cache_key] = products_data
+        _cache['products_cache_time'] = time.time()
+    
+    return jsonify(products_data)
+
 @app.errorhandler(404)
 def not_found(error):
     """404 error handler"""
