@@ -74,6 +74,45 @@
             margin-bottom: 30px;
             font-size: 2em;
         }
+        
+        /* Product Filters */
+        .product-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .filter-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+        .filter-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .filter-select {
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .filter-count {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 10px;
+        }
+        
+        /* Dentist Form */
         .form-group { 
             margin-bottom: 25px; 
         }
@@ -196,6 +235,8 @@
             .tabs { flex-direction: column; }
             .tab-btn { width: 100%; }
             .product-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+            .product-filters { flex-direction: column; }
+            .filter-input, .filter-select { width: 100%; min-width: 100%; }
         }
     </style>
 </head>
@@ -248,6 +289,22 @@
         <div id="products-tab" class="tab-content">
             <div class="search-card">
                 <h2>Dental Products</h2>
+                <div class="product-filters">
+                    <input type="text" id="product-search" class="filter-input" placeholder="🔍 Search products..." oninput="filterProducts()">
+                    <select id="category-filter" class="filter-select" onchange="filterProducts()">
+                        <option value="">All Categories</option>
+                        <option value="toothbrush">Toothbrushes</option>
+                        <option value="toothpaste">Toothpaste</option>
+                        <option value="whitening">Teeth Whitening</option>
+                        <option value="floss">Floss & Picks</option>
+                        <option value="mouthwash">Mouthwash</option>
+                        <option value="electric">Electric Tools</option>
+                        <option value="holder">Holders & Storage</option>
+                        <option value="kids">Kids Products</option>
+                        <option value="pet">Pet Dental</option>
+                    </select>
+                </div>
+                <div class="filter-count" id="filter-count"></div>
                 <div id="product-loading" class="loading">Loading products</div>
                 <div id="product-error" class="error-message" style="display: none;"></div>
                 <div id="product-grid" class="product-grid" style="display: none;"></div>
@@ -256,6 +313,8 @@
     </div>
     
     <script>
+        let allProducts = [];
+        
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -284,6 +343,7 @@
                     return response.json();
                 })
                 .then(products => {
+                    allProducts = products;
                     loading.style.display = 'none';
                     error.style.display = 'none';
                     grid.style.display = 'grid';
@@ -294,23 +354,7 @@
                         return;
                     }
                     
-                    products.forEach(product => {
-                        const card = document.createElement('div');
-                        card.className = 'product-card';
-                        card.onclick = () => window.location = '/product/' + product.id;
-                        
-                        const imageUrl = product.images && product.images[0] ? product.images[0].src : 'https://via.placeholder.com/280x200?text=No+Image';
-                        const price = product.variants && product.variants[0] ? product.variants[0].price : '0.00';
-                        
-                        card.innerHTML = `
-                            <img src="${imageUrl}" alt="${product.title}" class="product-image" onerror="this.src='https://via.placeholder.com/280x200?text=Image+Not+Available'">
-                            <div class="product-title">${product.title}</div>
-                            <div class="product-price">$${price}</div>
-                            <button class="view-product-btn" onclick="event.stopPropagation(); window.location='/product/${product.id}'">View Details</button>
-                        `;
-                        
-                        grid.appendChild(card);
-                    });
+                    renderProducts(products);
                 })
                 .catch(error => {
                     loading.style.display = 'none';
@@ -318,6 +362,63 @@
                     document.getElementById('product-error').style.display = 'block';
                     console.error('Error:', error);
                 });
+        }
+        
+        function getProductCategory(product) {
+            const title = product.title.toLowerCase();
+            const tags = (product.tags || '').toLowerCase();
+            const combined = title + ' ' + tags;
+            
+            if (combined.includes('toothbrush') && !combined.includes('holder')) return 'toothbrush';
+            if (combined.includes('toothpaste') || combined.includes('tooth paste')) return 'toothpaste';
+            if (combined.includes('whitening') || combined.includes('white')) return 'whitening';
+            if (combined.includes('floss') || combined.includes('pick')) return 'floss';
+            if (combined.includes('mouthwash') || combined.includes('rinse')) return 'mouthwash';
+            if (combined.includes('electric') || combined.includes('ultrasonic')) return 'electric';
+            if (combined.includes('holder') || combined.includes('dispenser') || combined.includes('storage')) return 'holder';
+            if (combined.includes('kid') || combined.includes('baby') || combined.includes('child')) return 'kids';
+            if (combined.includes('dog') || combined.includes('cat') || combined.includes('pet')) return 'pet';
+            return 'other';
+        }
+        
+        function filterProducts() {
+            const searchTerm = document.getElementById('product-search').value.toLowerCase();
+            const category = document.getElementById('category-filter').value;
+            
+            const filtered = allProducts.filter(product => {
+                const matchesSearch = product.title.toLowerCase().includes(searchTerm) || 
+                                    (product.tags || '').toLowerCase().includes(searchTerm);
+                const matchesCategory = !category || getProductCategory(product) === category;
+                return matchesSearch && matchesCategory;
+            });
+            
+            renderProducts(filtered);
+        }
+        
+        function renderProducts(products) {
+            const grid = document.getElementById('product-grid');
+            const countElement = document.getElementById('filter-count');
+            
+            countElement.textContent = `Showing ${products.length} of ${allProducts.length} products`;
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => window.location = '/product/' + product.id;
+                
+                const imageUrl = product.images && product.images[0] ? product.images[0].src : 'https://via.placeholder.com/280x200?text=No+Image';
+                const price = product.variants && product.variants[0] ? product.variants[0].price : '0.00';
+                
+                card.innerHTML = `
+                    <img src="${imageUrl}" alt="${product.title}" class="product-image" onerror="this.src='https://via.placeholder.com/280x200?text=Image+Not+Available'">
+                    <div class="product-title">${product.title}</div>
+                    <div class="product-price">$${price}</div>
+                    <button class="view-product-btn" onclick="event.stopPropagation(); window.location='/product/${product.id}'">View Details</button>
+                `;
+                
+                grid.appendChild(card);
+            });
         }
     </script>
 </body>
