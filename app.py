@@ -172,4 +172,21 @@ def checkout():
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8080))
+
+@app.route('/products-json')
+def products_json():
+    """JSON endpoint for products (used by JavaScript)"""
+    cache_key = 'products_data'
+    if cache_key in _cache and time.time() - _cache.get('products_cache_time', 0) < 300:
+        products_data = _cache[cache_key]
+    else:
+        data = call_shopify_api('products.json?limit=250')
+        products_data = data.get('products', [])
+        _cache[cache_key] = products_data
+        _cache['products_cache_time'] = time.time()
+    
+    return jsonify(products_data)
+
+if __name__ == '__main__':
+    port = int(os.getenv('PORT', 8080))
     app.run(host='0.0.0.0', port=port, debug=True)
