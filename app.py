@@ -107,16 +107,110 @@ def search():
     cur.close()
     conn.close()
     
-    html = '''<!DOCTYPE html><html><head><title>ToothSnap - Search Results</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>* { margin: 0; padding: 0; box-sizing: border-box; } body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; } .container { max-width: 1200px; margin: 0 auto; } .header { text-align: center; color: white; margin-bottom: 40px; } .header h1 { font-size: 2.5em; margin-bottom: 10px; } .results-count { color: white; font-size: 1.2em; margin-bottom: 20px; } .dentist-card { background: white; border-radius: 15px; padding: 30px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); } .dentist-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; } .dentist-info h2 { color: #667eea; font-size: 1.8em; margin-bottom: 5px; } .dentist-info h3 { color: #666; font-size: 1.2em; font-weight: normal; } .rating { background: #ffd700; padding: 8px 15px; border-radius: 20px; font-weight: bold; } .details { margin-top: 15px; line-height: 1.8; } .details p { margin-bottom: 8px; color: #333; } .insurance-badge { display: inline-block; background: #e8f4f8; color: #667eea; padding: 5px 15px; border-radius: 20px; margin-right: 10px; margin-top: 10px; font-size: 0.9em; } .back-btn { display: inline-block; background: white; color: #667eea; padding: 15px 30px; border-radius: 10px; text-decoration: none; font-weight: 600; margin-bottom: 20px; } .back-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.3); } .no-results { background: white; padding: 40px; border-radius: 15px; text-align: center; }</style></head><body><div class="container"><div class="header"><h1>🦷 ToothSnap</h1></div><a href="/" class="back-btn">← New Search</a><div class="results-count">Found ''' + str(len(dentists)) + ''' dentists</div>'''
+    html = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToothSnap | Dentist Search Results</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Inter', sans-serif; background-color: #fbf9f8; color: #1b1c1c; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006098", "primary-container": "#007abe", "on-primary": "#ffffff",
+                        "secondary": "#006b5f", "secondary-container": "#8df5e3", "on-secondary-container": "#007165",
+                        "surface": "#fbf9f8", "surface-container-low": "#f5f3f3", "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1b1c1c", "on-surface-variant": "#404750", "outline-variant": "#c0c7d2"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl shadow-sm">
+        <div class="flex items-center w-full px-8 py-4 max-w-[1440px] mx-auto">
+            <a class="text-2xl font-extrabold text-primary tracking-tighter font-headline" href="/">ToothSnap</a>
+        </div>
+    </header>
     
+    <main class="pt-32 pb-20 px-8 max-w-4xl mx-auto">
+        <div class="mb-12">
+            <a href="/" class="inline-flex items-center gap-2 text-primary hover:text-primary-container font-semibold mb-6 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span> Back to Home
+            </a>
+            <h1 class="text-4xl font-extrabold font-headline tracking-tight mb-2">Search Results</h1>
+            <p class="text-on-surface-variant font-medium">Found ''' + str(len(dentists)) + ''' dentists matching your criteria</p>
+        </div>
+        
+        <div class="space-y-6">
+'''
+
     if dentists:
         for d in dentists:
-            stars = '⭐' * int(d['rating'])
-            html += f'''<div class="dentist-card"><div class="dentist-header"><div class="dentist-info"><h2>{d['practice_name']}</h2><h3>{d['name']}</h3></div><div class="rating">{stars} {d['rating']}</div></div><div class="details"><p><strong>📍 Address:</strong> {d['address']}, {d['city']}, {d['state']} {d['zip']}</p><p><strong>📞 Phone:</strong> {d['phone']}</p><p><strong>💳 Accepts:</strong></p>{''.join([f'<span class="insurance-badge">{ins}</span>' for ins in d['insurance'].split(', ')])}</div></div>'''
+            stars = ''.join(['<span class="material-symbols-outlined text-[#edc153] text-lg" style="font-variation-settings: \'FILL\' 1;">star</span>'] * int(d['rating']))
+            ins_badges = ''.join([f'<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-semibold">{ins}</span>' for ins in d['insurance'].split(', ') if ins.strip()])
+            
+            html += f'''
+            <article class="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/15 shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-2xl font-extrabold font-headline mb-1">{d['practice_name']}</h3>
+                        <p class="text-primary font-semibold text-lg">{d['name']}</p>
+                    </div>
+                    <div class="flex items-center gap-1 bg-[#fffdf0] px-3 py-1 rounded-full border border-[#f5e6b3]">
+                        {stars}
+                        <span class="font-bold ml-1 text-sm text-[#745800]">{d['rating']}</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-surface-container-low">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-outline-variant">location_on</span>
+                        <div>
+                            <p class="font-medium">{d['address']}</p>
+                            <p class="text-on-surface-variant">{d['city']}, {d['state']} {d['zip']}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-outline-variant">call</span>
+                        <p class="font-bold text-lg">{d['phone']}</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant mb-3">Accepts Insurance</p>
+                    <div class="flex flex-wrap gap-2">
+                        {ins_badges}
+                    </div>
+                </div>
+            </article>
+            '''
     else:
-        html += '<div class="no-results"><h2>No dentists found</h2><p>Try adjusting your search criteria</p></div>'
-    
-    html += '</div></body></html>'
+        html += '''
+        <div class="bg-surface-container-low rounded-2xl p-12 text-center border border-outline-variant/15">
+            <span class="material-symbols-outlined text-5xl text-outline-variant mb-4">search_off</span>
+            <h2 class="text-2xl font-bold font-headline mb-2">No dentists found</h2>
+            <p class="text-on-surface-variant">Try adjusting your search criteria and try again.</p>
+        </div>
+        '''
+        
+    html += '''
+        </div>
+    </main>
+</body>
+</html>
+'''
     return html
 
 # ========== E-COMMERCE ROUTES ==========
