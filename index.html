@@ -103,8 +103,22 @@
 <a class="text-[#1A82C7] border-b-2 border-[#1A82C7] pb-1 font-headline font-bold tracking-tight hover:scale-[1.02] transition-all duration-300" href="#">Supplies</a>
 <a class="text-[#1b1c1c] font-medium font-headline tracking-tight hover:scale-[1.02] hover:text-[#006098] transition-all duration-300" href="#">Equipment</a>
 <a class="text-[#1b1c1c] font-medium font-headline tracking-tight hover:scale-[1.02] hover:text-[#006098] transition-all duration-300" href="#">Instruments</a>
-<a class="text-[#1b1c1c] font-medium font-headline tracking-tight hover:scale-[1.02] hover:text-[#006098] transition-all duration-300" href="#">Education</a>
-<a class="text-[#1b1c1c] font-medium font-headline tracking-tight hover:scale-[1.02] hover:text-[#006098] transition-all duration-300" href="/dentist/register">Dentist Registration</a>
+<a class="text-[#1b1c1c] font-medium font-headline tracking-tight hover:scale-[1.02] hover:text-[#006098] transition-all duration-300" href="/education">Education</a>
+
+<div class="relative group">
+  <button class="text-[#1b1c1c] font-medium font-headline tracking-tight hover:text-[#006098] transition-all duration-300 flex items-center gap-1">
+    Registration <span class="material-symbols-outlined text-[16px]">expand_more</span>
+  </button>
+  <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-outline-variant opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden z-50">
+    <a href="/register?type=patient" class="block px-4 py-3 text-sm text-on-surface hover:bg-surface-container-low border-b border-outline-variant transition-colors flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary text-[18px]">person</span> I'm a Patient
+    </a>
+    <a href="/dentist/register" class="block px-4 py-3 text-sm text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary text-[18px]">dentistry</span> I'm a Dentist
+    </a>
+  </div>
+</div>
+
 </nav>
 </div>
 <div class="flex items-center gap-6">

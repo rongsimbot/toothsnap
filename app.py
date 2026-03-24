@@ -1056,6 +1056,7 @@ def dentist_register():
         phone = request.form.get("phone", "")
         email = request.form.get("email", "")
         website = request.form.get("website", "")
+        services = request.form.get("services", "")
         
         if not name:
             return "Name is required", 400
@@ -1064,8 +1065,8 @@ def dentist_register():
         cur = conn.cursor()
         try:
             cur.execute(
-                "INSERT INTO dentists (name, practice_name, address, city, state, zip, phone, email, website) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
-                (name, practice_name, address, city, state, zip_code, phone, email, website)
+                "INSERT INTO dentists (name, practice_name, address, city, state, zip, phone, email, website, services) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                (name, practice_name, address, city, state, zip_code, phone, email, website, services)
             )
             dentist_id = cur.fetchone()[0]
             conn.commit()
@@ -1184,6 +1185,13 @@ def dentist_register():
                 <div>
                     <label class="block text-sm font-bold text-on-surface mb-2">Website</label>
                     <input type="url" name="website" placeholder="https://www.smilecare.com" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">Dental Services Offered (Detailed)</label>
+                    <textarea name="services" rows="4" placeholder="List your specialized services, treatments, equipment (e.g., Invisalign, Pediatric Dentistry, Laser Whitening)..." class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary"></textarea>
                 </div>
             </div>
 
@@ -1691,7 +1699,9 @@ def register():
     <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg border border-outline-variant">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold font-['Plus_Jakarta_Sans'] text-primary mb-2">Create Account</h1>
-            <p class="text-on-surface-variant">Join ToothSnap to manage your orders</p>
+            <p class="text-on-surface-variant">
+                {f'<span class="text-primary font-bold block mb-2">You must sign up to view the Education Center.</span>' if request.args.get("prompt") == "education" else 'Join ToothSnap to manage your orders'}
+            </p>
         </div>
         
         {"<div class='bg-red-100 text-red-700 p-3 rounded-lg mb-6 text-sm text-center font-semibold'>" + str(error) + "</div>" if error else ""}
@@ -1866,7 +1876,7 @@ def public_dentist(dentist_id):
             conn.rollback()
             error = "Could not save review. " + str(e)
             
-    cur.execute("SELECT id, name, practice_name, address, city, state, zip, phone, website FROM dentists WHERE id = %s", (dentist_id,))
+    cur.execute("SELECT id, name, practice_name, address, city, state, zip, phone, website, services FROM dentists WHERE id = %s", (dentist_id,))
     dentist_row = cur.fetchone()
     if not dentist_row:
         cur.close()
@@ -1876,7 +1886,7 @@ def public_dentist(dentist_id):
     d = {
         "id": dentist_row[0], "name": dentist_row[1], "practice_name": dentist_row[2],
         "address": dentist_row[3], "city": dentist_row[4], "state": dentist_row[5],
-        "zip": dentist_row[6], "phone": dentist_row[7], "website": dentist_row[8]
+        "zip": dentist_row[6], "phone": dentist_row[7], "website": dentist_row[8], "services": dentist_row[9]
     }
     
     cur.execute("SELECT ip.name FROM insurance_providers ip JOIN dentist_insurance di ON ip.id = di.provider_id WHERE di.dentist_id = %s", (dentist_id,))
@@ -2025,6 +2035,10 @@ def public_dentist(dentist_id):
                             <span>{{d['phone'] or "No phone listed"}}</span>
                         </div>
                         <div class="flex items-start gap-2 md:col-span-2">
+                            <span class="material-symbols-outlined text-[18px]">medical_services</span>
+                            <span><strong>Services:</strong> {{d.get('services') or "General Dentistry"}}</span>
+                        </div>
+                        <div class="flex items-start gap-2 md:col-span-2">
                             <span class="material-symbols-outlined text-[18px]">shield</span>
                             <span><strong>Accepted Insurances:</strong> {{insurance_str}}</span>
                         </div>
@@ -2048,6 +2062,90 @@ def public_dentist(dentist_id):
                     {form_html}
                 </div>
             </div>
+        </div>
+    </div>
+</body>
+</html>"""
+    return render_template_string(html)
+
+
+@app.route("/education")
+def education():
+    if "user_id" not in session:
+        return redirect("/register?prompt=education")
+        
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToothSnap | Education Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {{ theme: {{ extend: {{ colors: {{ "primary": "#006098", "primary-container": "#007abe", "on-primary": "#ffffff", "surface": "#fbf9f8", "on-surface": "#1b1c1c", "on-surface-variant": "#404750", "outline-variant": "#c0c7d2" }} }} }} }}
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px]">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight font-['''Plus_Jakarta_Sans''']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/dashboard" class="text-primary">My Account</a>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto py-12 px-6">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-extrabold font-['''Plus_Jakarta_Sans'''] text-primary mb-4">Dental Hygiene Education Center</h1>
+            <p class="text-xl text-on-surface-variant max-w-2xl mx-auto">Expert tips and guides for maintaining a healthy, beautiful smile for you and your family.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Kids Section -->
+            <div class="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="h-48 bg-blue-100 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[80px] text-primary">child_care</span>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-3 text-on-surface">Pediatric Oral Care</h2>
+                    <p class="text-on-surface-variant mb-4">Learn how to build strong brushing habits for your kids, understand teething, and prevent early cavities.</p>
+                    <ul class="space-y-2 text-sm text-on-surface-variant font-medium mb-6">
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-[18px]">check_circle</span> Brushing techniques for toddlers</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-[18px]">check_circle</span> Choosing the right fluoride toothpaste</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-[18px]">check_circle</span> When to schedule the first dentist visit</li>
+                    </ul>
+                    <button class="w-full bg-surface-container-low text-primary py-2 rounded-lg font-bold border border-outline-variant hover:bg-primary hover:text-white transition-colors">Read Guide</button>
+                </div>
+            </div>
+            
+            <!-- Adults Section -->
+            <div class="bg-white rounded-2xl border border-outline-variant overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="h-48 bg-purple-100 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[80px] text-purple-600">person</span>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-3 text-on-surface">Adult Dental Hygiene</h2>
+                    <p class="text-on-surface-variant mb-4">Advanced care for adult teeth, including flossing effectively, preventing gum disease, and protecting enamel.</p>
+                    <ul class="space-y-2 text-sm text-on-surface-variant font-medium mb-6">
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-[18px]">check_circle</span> The proper way to floss (C-shape method)</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-[18px]">check_circle</span> Impact of diet and coffee on enamel</li>
+                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-green-500 text-[18px]">check_circle</span> Signs of gingivitis and gum disease</li>
+                    </ul>
+                    <button class="w-full bg-surface-container-low text-primary py-2 rounded-lg font-bold border border-outline-variant hover:bg-primary hover:text-white transition-colors">Read Guide</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-12 text-center border-t border-outline-variant pt-8">
+            <h3 class="text-2xl font-bold mb-4">Need personalized advice?</h3>
+            <a href="/dentists" class="inline-flex items-center justify-center gap-2 bg-primary text-on-primary px-8 py-3 rounded-full font-bold shadow-sm hover:bg-primary-container transition-colors">
+                <span class="material-symbols-outlined">search</span> Find a Dentist Near You
+            </a>
         </div>
     </div>
 </body>
