@@ -347,7 +347,7 @@ def search():
                                 <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">star</span>
                                 <span style="color: #ffffff; margin-left: 4px; font-size: 12px; font-weight: bold; opacity: 0.9;">5.0</span>
                             </div>
-                            <h4 style="font-weight: 800; font-size: 16px; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif;">${{d.practice_name}}</h4>
+                            <a href="/dentist/${{d.id}}" style="text-decoration: none; color: inherit;"><h4 style="font-weight: 800; font-size: 16px; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; color: #006098; transition: color 0.2s;">${{d.practice_name}} <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">open_in_new</span></h4></a>
                             <p style="margin: 0; font-size: 13px; opacity: 0.9;">${{d.name}}</p>
                         </div>
                         <div class="popup-body">
@@ -1026,7 +1026,7 @@ def public_dentists():
         html += f"""
                     <tr class="hover:bg-surface-container-low transition-colors">
                         <td class="py-4 px-6">
-                            <div class="font-bold text-on-surface">{d["name"]}</div>
+                            <a href="/dentist/{d['id']}" class="font-bold text-primary hover:underline flex items-center gap-1">{d["name"]} <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
                         </td>
                         <td class="py-4 px-6 hidden sm:table-cell text-on-surface-variant">{d["practice_name"] or "-"}</td>
                         <td class="py-4 px-6 text-on-surface-variant">{d["city"] or "-"}, {d["state"] or "-"}</td>
