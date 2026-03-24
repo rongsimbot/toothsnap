@@ -856,6 +856,268 @@ def internal_error(error):
 
 # ========== ADMIN ROUTES ==========
 
+
+@app.route("/dentists")
+def public_dentists():
+    """Public page to list all dentists"""
+    conn = get_db()
+    cur = conn.cursor()
+    
+    search_query = request.args.get("q", "").strip()
+    if search_query:
+        # Simple case-insensitive search by name, practice_name, city, or state
+        q = f"%{search_query}%"
+        cur.execute("SELECT id, name, practice_name, city, state FROM dentists WHERE name ILIKE %s OR practice_name ILIKE %s OR city ILIKE %s OR state ILIKE %s ORDER BY name ASC", (q, q, q, q))
+    else:
+        cur.execute("SELECT id, name, practice_name, city, state FROM dentists ORDER BY name ASC")
+    
+    results = cur.fetchall()
+    dentists = [{"id": r[0], "name": r[1], "practice_name": r[2], "city": r[3], "state": r[4]} for r in results]
+    
+    cur.close()
+    conn.close()
+    
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToothSnap | Find a Dentist</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {{
+            theme: {{
+                extend: {{
+                    colors: {{
+                        "primary": "#006098", "primary-container": "#007abe", "on-primary": "#ffffff",
+                        "surface": "#fbf9f8", "surface-container-low": "#f5f3f3", "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1b1c1c", "on-surface-variant": "#404750", "outline-variant": "#c0c7d2"
+                    }}
+                }}
+            }}
+        }}
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto py-10 px-6">
+        <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+            <div>
+                <a href="/" class="inline-flex items-center gap-2 text-primary hover:text-primary-container font-semibold mb-4 transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">arrow_back</span> Back to Home
+                </a>
+                <h1 class="text-3xl font-extrabold font-['Plus_Jakarta_Sans'] tracking-tight">Dentist Directory</h1>
+                <p class="text-on-surface-variant mt-2">Find open registry dentists near you.</p>
+            </div>
+            
+            <form action="/dentists" method="GET" class="flex gap-2 w-full md:w-auto">
+                <input type="text" name="q" placeholder="Search by name or location..." value="{search_query}" class="rounded-lg border-outline-variant focus:border-primary focus:ring-primary px-4 py-2 w-full md:w-64">
+                <button type="submit" class="bg-primary text-on-primary px-4 py-2 rounded-lg font-semibold hover:bg-primary-container transition-colors">Search</button>
+            </form>
+        </div>
+
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant text-sm font-semibold text-on-surface-variant uppercase tracking-wider">
+                        <th class="py-4 px-6">Dentist Name</th>
+                        <th class="py-4 px-6 hidden sm:table-cell">Practice</th>
+                        <th class="py-4 px-6">Location</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+"""
+    
+    if not dentists:
+        html += f"""
+                    <tr>
+                        <td colspan="3" class="py-8 px-6 text-center text-on-surface-variant">No dentists found matching "{search_query}"</td>
+                    </tr>
+"""
+    
+    for d in dentists:
+        html += f"""
+                    <tr class="hover:bg-surface-container-low transition-colors">
+                        <td class="py-4 px-6">
+                            <div class="font-bold text-on-surface">{d["name"]}</div>
+                        </td>
+                        <td class="py-4 px-6 hidden sm:table-cell text-on-surface-variant">{d["practice_name"] or "-"}</td>
+                        <td class="py-4 px-6 text-on-surface-variant">{d["city"] or "-"}, {d["state"] or "-"}</td>
+                    </tr>
+"""
+        
+    html += """
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>"""
+    return render_template_string(html)
+
+
+@app.route("/dentist/register", methods=["GET", "POST"])
+def dentist_register():
+    """Public page for dentists to register"""
+    if request.method == "POST":
+        name = request.form.get("name")
+        practice_name = request.form.get("practice_name", "")
+        address = request.form.get("address", "")
+        city = request.form.get("city", "")
+        state = request.form.get("state", "")
+        zip_code = request.form.get("zip", "")
+        phone = request.form.get("phone", "")
+        email = request.form.get("email", "")
+        website = request.form.get("website", "")
+        
+        if not name:
+            return "Name is required", 400
+            
+        conn = get_db()
+        cur = conn.cursor()
+        try:
+            cur.execute(
+                "INSERT INTO dentists (name, practice_name, address, city, state, zip, phone, email, website) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id",
+                (name, practice_name, address, city, state, zip_code, phone, email, website)
+            )
+            dentist_id = cur.fetchone()[0]
+            conn.commit()
+            success = True
+        except Exception as e:
+            conn.rollback()
+            return f"Database error: {str(e)}", 500
+        finally:
+            cur.close()
+            conn.close()
+            
+        return redirect("/dentists?success=registered")
+        
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToothSnap | Dentist Registration</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {{
+            theme: {{
+                extend: {{
+                    colors: {{
+                        "primary": "#006098", "primary-container": "#007abe", "on-primary": "#ffffff",
+                        "surface": "#fbf9f8", "surface-container-low": "#f5f3f3", "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1b1c1c", "on-surface-variant": "#404750", "outline-variant": "#c0c7d2"
+                    }}
+                }}
+            }}
+        }}
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="hover:text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
+
+    <div class="max-w-3xl mx-auto py-10 px-6">
+        <div class="mb-8">
+            <a href="/dentists" class="inline-flex items-center gap-2 text-primary hover:text-primary-container font-semibold mb-4 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span> Back to Directory
+            </a>
+            <h1 class="text-3xl font-extrabold font-['Plus_Jakarta_Sans'] tracking-tight">Dentist Registration</h1>
+            <p class="text-on-surface-variant mt-2">Join the ToothSnap Open Registry so patients can find you.</p>
+        </div>
+
+        <form method="POST" class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant p-8 flex flex-col gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">Full Name / Title *</label>
+                    <input type="text" name="name" required placeholder="Dr. Jane Smith, DDS" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">Practice Name</label>
+                    <input type="text" name="practice_name" placeholder="Smile Care Clinic" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">Address</label>
+                    <input type="text" name="address" placeholder="123 Dental Way" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">City</label>
+                    <input type="text" name="city" placeholder="Austin" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">State</label>
+                    <input type="text" name="state" placeholder="TX" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">ZIP Code</label>
+                    <input type="text" name="zip" placeholder="78701" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">Phone</label>
+                    <input type="text" name="phone" placeholder="(555) 123-4567" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">Email</label>
+                    <input type="email" name="email" placeholder="doctor@smilecare.com" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-on-surface mb-2">Website</label>
+                    <input type="url" name="website" placeholder="https://www.smilecare.com" class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary">
+                </div>
+            </div>
+
+            <div class="mt-4 flex justify-end gap-4 border-t border-outline-variant pt-6">
+                <a href="/dentists" class="px-6 py-3 font-bold text-on-surface-variant hover:text-on-surface transition-colors">Cancel</a>
+                <button type="submit" class="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all">
+                    Complete Registration
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>"""
+    return render_template_string(html)
+
 @app.route('/admin/dentists')
 def admin_dentists():
     """Admin page to list all dentists"""
