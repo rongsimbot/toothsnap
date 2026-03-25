@@ -673,145 +673,37 @@ def cart():
     html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - ToothSnap</title>
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            min-height: 100vh; 
-            padding: 20px; 
-        }}
-        .container {{ max-width: 1000px; margin: 0 auto; }}
-        .back-btn {{
-            display: inline-block;
-            background: white;
-            color: #667eea;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }}
-        .cart-container {{
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }}
-        .cart-header {{
-            font-size: 2.5em;
-            color: #333;
-            margin-bottom: 30px;
-        }}
-        .empty-cart {{
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }}
-        .empty-cart h2 {{
-            font-size: 2em;
-            margin-bottom: 20px;
-        }}
-        .continue-shopping {{
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 20px;
-        }}
-        .cart-item {{
-            display: grid;
-            grid-template-columns: 120px 1fr auto;
-            gap: 20px;
-            padding: 20px;
-            border-bottom: 2px solid #f0f0f0;
-            align-items: center;
-        }}
-        .cart-item:last-child {{
-            border-bottom: none;
-        }}
-        .item-image {{
-            width: 100%;
-            border-radius: 10px;
-        }}
-        .item-details h3 {{
-            color: #333;
-            margin-bottom: 10px;
-        }}
-        .item-details p {{
-            color: #666;
-            margin-bottom: 5px;
-        }}
-        .item-price {{
-            font-size: 1.5em;
-            color: #667eea;
-            font-weight: bold;
-        }}
-        .cart-summary {{
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 3px solid #667eea;
-        }}
-        .summary-row {{
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }}
-        .summary-total {{
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #667eea;
-        }}
-        .checkout-btn {{
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.4em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.2s;
-        }}
-        .checkout-btn:hover {{
-            transform: scale(1.02);
-        }}
-        @media (max-width: 768px) {{
-            .cart-item {{
-                grid-template-columns: 80px 1fr;
-            }}
-            .item-price {{
-                grid-column: 2;
-                text-align: right;
-                margin-top: 10px;
-            }}
-        }}
-    </style>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){{dataLayer.push(arguments);}}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
+        tailwind.config = {{
+            theme: {{
+                extend: {{
+                    colors: {{
+                        "primary": "#006098", "primary-container": "#007abe", "on-primary": "#ffffff",
+                        "surface": "#fbf9f8", "surface-container-lowest": "#ffffff", "surface-container-low": "#f5f3f3",
+                        "on-surface": "#1b1c1c", "on-surface-variant": "#404750", "outline-variant": "#c0c7d2"
+                    }}
+                }}
+            }}
+        }}
     </script>
+    <style>
+        .material-symbols-outlined {{ font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }}
+        body {{ font-family: 'Inter', sans-serif; background-color: #fbf9f8; color: #1b1c1c; }}
+        .font-headline {{ font-family: 'Plus Jakarta Sans', sans-serif; }}
+    </style>
 </head>
-<body>
+<body class="bg-surface text-on-surface">
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -820,50 +712,92 @@ def cart():
             <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
         </div>
     </nav>
-    <div class="container">
-        <a href="/" class="back-btn">← Continue Shopping</a>
-        <div class="cart-container">
-            <h1 class="cart-header">🛒 Shopping Cart</h1>'''
-    
+
+    <div class="max-w-5xl mx-auto py-12 px-6">
+        <div class="mb-8">
+            <a href="/" class="inline-flex items-center gap-2 text-primary hover:text-primary-container font-semibold mb-4 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span> Continue Shopping
+            </a>
+            <h1 class="text-4xl font-extrabold font-headline tracking-tight">Shopping Cart</h1>
+            <p class="text-on-surface-variant mt-2">Review your selected items before checkout.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant overflow-hidden">
+'''
+
     if not cart_items:
         html += '''
-            <div class="empty-cart">
-                <h2>Your cart is empty</h2>
-                <p>Add some great dental products to get started!</p>
-                <a href="/" class="continue-shopping">Browse Products</a>
-            </div>'''
+                    <div class="p-12 text-center">
+                        <span class="material-symbols-outlined text-[64px] text-outline-variant mb-4">shopping_cart_checkout</span>
+                        <h2 class="text-2xl font-bold font-headline mb-2">Your cart is empty</h2>
+                        <p class="text-on-surface-variant mb-8">Looks like you haven't added any dental products yet.</p>
+                        <a href="/" class="inline-flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-xl font-semibold hover:bg-primary-container transition-colors">
+                            Browse Products
+                        </a>
+                    </div>
+'''
     else:
-        # Show cart items
+        html += '<div class="divide-y divide-outline-variant">'
         for item in cart_items:
             item_total = float(item.get('price', 0)) * int(item.get('quantity', 1))
+            image_url = item.get('image', 'https://via.placeholder.com/150?text=No+Image')
             html += f'''
-            <div class="cart-item">
-                <img src="{item.get('image', '')}" alt="{item.get('title', 'Product')}" class="item-image">
-                <div class="item-details">
-                    <h3>{item.get('title', 'Product')}</h3>
-                    <p>Quantity: {item.get('quantity', 1)}</p>
-                    <p>Price: ${item.get('price', '0.00')} each</p>
+                    <div class="p-6 flex flex-col sm:flex-row gap-6 hover:bg-surface-container-low transition-colors">
+                        <div class="w-full sm:w-32 h-32 bg-surface-container-low rounded-xl overflow-hidden shrink-0 border border-outline-variant/30 flex items-center justify-center">
+                            <img src="{image_url}" alt="{item.get('title', 'Product')}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow flex flex-col justify-center">
+                            <h3 class="text-xl font-bold font-headline text-on-surface mb-1">{item.get('title', 'Product')}</h3>
+                            <p class="text-sm font-semibold text-on-surface-variant mb-3">Item details</p>
+                            <div class="flex items-center gap-4 text-sm font-medium">
+                                <span class="bg-surface-container-low px-3 py-1 rounded-full border border-outline-variant">Qty: {item.get('quantity', 1)}</span>
+                                <span class="text-on-surface-variant">Unit Price: ${float(item.get('price', 0)):.2f}</span>
+                            </div>
+                        </div>
+                        <div class="sm:text-right flex flex-col justify-center shrink-0">
+                            <span class="text-2xl font-extrabold text-primary">${item_total:.2f}</span>
+                        </div>
+                    </div>
+'''
+        html += '</div>'
+
+    html += f'''
                 </div>
-                <div class="item-price">${item_total:.2f}</div>
-            </div>'''
-        
-        # Cart summary
-        html += f'''
-            <div class="cart-summary">
-                <div class="summary-row">
-                    <span>Subtotal ({len(cart_items)} items):</span>
-                    <span>${total:.2f}</span>
+            </div>
+            
+            <div class="lg:col-span-1">
+                <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant p-6 sticky top-28">
+                    <h2 class="text-xl font-bold font-headline mb-6">Order Summary</h2>
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between text-on-surface-variant font-medium">
+                            <span>Subtotal ({len(cart_items)} items)</span>
+                            <span>${total:.2f}</span>
+                        </div>
+                        <div class="flex justify-between text-on-surface-variant font-medium">
+                            <span>Shipping</span>
+                            <span class="text-green-600 font-semibold">Calculated at checkout</span>
+                        </div>
+                        <div class="flex justify-between text-on-surface-variant font-medium">
+                            <span>Taxes</span>
+                            <span class="text-green-600 font-semibold">Calculated at checkout</span>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-outline-variant mb-8">
+                        <div class="flex justify-between items-end">
+                            <span class="text-lg font-bold font-headline">Total</span>
+                            <span class="text-3xl font-extrabold text-primary">${total:.2f}</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:bg-primary-container transition-transform active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-primary/20" onclick="window.location='/checkout'" {'disabled' if not cart_items else ''} style="{'opacity: 0.5; cursor: not-allowed;' if not cart_items else ''}">
+                        Proceed to Checkout <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                    <div class="mt-6 flex items-center justify-center gap-2 text-xs text-on-surface-variant/70 font-semibold">
+                        <span class="material-symbols-outlined text-[16px]">lock</span> Secure encrypted checkout
+                    </div>
                 </div>
-                <div class="summary-row summary-total">
-                    <span>Total:</span>
-                    <span>${total:.2f}</span>
-                </div>
-                <button class="checkout-btn" onclick="window.location='/checkout'">
-                    Proceed to Checkout →
-                </button>
-            </div>'''
-    
-    html += '''
+            </div>
         </div>
     </div>
 </body>
