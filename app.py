@@ -137,11 +137,11 @@ def search():
         .font-headline {{ font-family: 'Plus Jakarta Sans', sans-serif; }}
         
         /* Map Styles */
-        #map {{ height: 100vh; width: 100%; z-index: 1; }}
+        #map {{ height: calc(100vh - 73px); width: 100%; z-index: 1; }}
         
         /* Split Layout */
-        .layout-wrapper {{ display: flex; height: 100vh; width: 100vw; }}
-        .sidebar {{ width: 40%; min-width: 400px; max-width: 500px; height: 100vh; overflow-y: auto; background: #fbf9f8; z-index: 10; box-shadow: 4px 0 15px rgba(0,0,0,0.05); position: relative; }}
+        .layout-wrapper {{ display: flex; height: calc(100vh - 73px); width: 100vw; }}
+        .sidebar {{ width: 40%; min-width: 400px; max-width: 500px; height: calc(100vh - 73px); overflow-y: auto; background: #fbf9f8; z-index: 10; box-shadow: 4px 0 15px rgba(0,0,0,0.05); position: relative; }}
         .map-container {{ flex-grow: 1; height: 100vh; position: relative; }}
         
         .dentist-card {{ cursor: pointer; transition: all 0.2s ease; }}
@@ -185,6 +185,19 @@ def search():
     </script>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
     <div class="layout-wrapper">
         <!-- LEFT SIDEBAR: Results -->
         <aside class="sidebar flex flex-col">
@@ -424,7 +437,20 @@ def products():
       gtag('js', new Date());
       gtag('config', 'G-XXXXXXXXXX');
     </script>
-</head><body><h1>Products ({len(products_data)} items)</h1><a href="/">← Back to Home</a><pre>{json.dumps(products_data[:5], indent=2)}</pre><p>... and {len(products_data) - 5} more products</p></body></html>'''
+</head><body>
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav><h1>Products ({len(products_data)} items)</h1><a href="/">← Back to Home</a><pre>{json.dumps(products_data[:5], indent=2)}</pre><p>... and {len(products_data) - 5} more products</p></body></html>'''
     return html
 
 @app.route('/product/<product_id>')
@@ -561,6 +587,19 @@ def product_detail(product_id):
     </script>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
     <div class="container">
         <a href="/" class="back-btn">← Back to Products</a>
         <div class="product-container">
@@ -768,6 +807,19 @@ def cart():
     </script>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
     <div class="container">
         <a href="/" class="back-btn">← Continue Shopping</a>
         <div class="cart-container">
@@ -879,6 +931,19 @@ def not_found(error):
       gtag('config', 'G-XXXXXXXXXX');
     </script>
 </head><body>
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
 <div class="error-container">
     <h1>404</h1>
     <h2>Page Not Found</h2>
@@ -909,6 +974,19 @@ def internal_error(error):
       gtag('config', 'G-XXXXXXXXXX');
     </script>
 </head><body>
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
 <div class="error-container">
     <h1>500</h1>
     <h2>Something Went Wrong</h2>
@@ -1122,8 +1200,8 @@ def dentist_register():
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
             <a href="/search" class="hover:text-primary transition-colors">Shop</a>
-            <a href="/dentists" class="hover:text-primary transition-colors">Find a Dentist</a>
-            <a href="/dentist/register" class="text-primary transition-colors">Dentist Registration</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
         </div>
     </nav>
 
@@ -1254,6 +1332,19 @@ def admin_dentists():
     </script>
 </head>
 <body class="bg-surface text-on-surface">
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
     <div class="max-w-6xl mx-auto py-10 px-6">
         <div class="flex justify-between items-center mb-8">
             <div>
@@ -1411,6 +1502,19 @@ def admin_edit_dentist(dentist_id):
     </script>
 </head>
 <body class="bg-surface text-on-surface pb-20">
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
     <div class="max-w-4xl mx-auto py-10 px-6">
         <div class="mb-8">
             <a href="/admin/dentists" class="inline-flex items-center gap-2 text-primary hover:text-primary-container font-semibold mb-4 transition-colors">
@@ -1604,6 +1708,19 @@ def login():
     </script>
 </head>
 <body class="bg-surface text-on-surface h-screen flex items-center justify-center">
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
     <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg border border-outline-variant">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold font-['Plus_Jakarta_Sans'] text-primary mb-2">Welcome Back</h1>
@@ -1696,6 +1813,19 @@ def register():
     </script>
 </head>
 <body class="bg-surface text-on-surface h-screen flex items-center justify-center">
+    <!-- Navbar -->
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <a href="/" class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+        </a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
+        </div>
+    </nav>
     <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg border border-outline-variant">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold font-['Plus_Jakarta_Sans'] text-primary mb-2">Create Account</h1>
@@ -1772,14 +1902,16 @@ def dashboard():
 </head>
 <body class="bg-surface text-on-surface">
     <!-- Navbar -->
-    <nav class="bg-white border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-primary text-[32px]">dentistry</span>
-            <span class="font-bold text-2xl tracking-tight font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
         </a>
-        <div class="flex items-center gap-4">
-            <span class="text-sm font-semibold text-on-surface-variant">Hello, {user_name}</span>
-            <a href="/logout" class="text-sm font-bold text-red-600 hover:text-red-800 transition-colors">Sign Out</a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
         </div>
     </nav>
 
@@ -1990,15 +2122,16 @@ def public_dentist(dentist_id):
 </head>
 <body class="bg-surface text-on-surface">
     <!-- Navbar -->
-    <nav class="bg-white border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-primary text-[32px]">dentistry</span>
-            <span class="font-bold text-2xl tracking-tight font-['''Plus_Jakarta_Sans''']">Tooth<span class="text-primary">Snap</span></span>
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
         </a>
-        <div class="flex gap-8 font-semibold text-[15px] text-on-surface-variant">
-            <a href="/dentists" class="hover:text-primary transition-colors">Directory</a>
-            <a href="/search" class="hover:text-primary transition-colors">Map Search</a>
-            {'<a href="/dashboard" class="text-primary">My Account</a>' if is_logged_in else '<a href="/login" class="text-primary">Sign In</a>'}
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
         </div>
     </nav>
 
@@ -2089,13 +2222,16 @@ def education():
 </head>
 <body class="bg-surface text-on-surface">
     <!-- Navbar -->
-    <nav class="bg-white border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+    <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-primary text-[32px]">dentistry</span>
-            <span class="font-bold text-2xl tracking-tight font-['''Plus_Jakarta_Sans''']">Tooth<span class="text-primary">Snap</span></span>
+            <span class="material-symbols-outlined text-primary text-[32px] font-medium" style="font-variation-settings: 'FILL' 1">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-on-surface font-['Plus_Jakarta_Sans']">Tooth<span class="text-primary">Snap</span></span>
         </a>
-        <div class="flex gap-8 font-semibold text-[15px] text-on-surface-variant">
-            <a href="/dashboard" class="text-primary">My Account</a>
+        <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <a href="/search" class="hover:text-primary transition-colors">Shop</a>
+            <a href="/dentists" class="text-primary transition-colors">Find a Dentist</a>
+            <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
         </div>
     </nav>
 
