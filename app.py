@@ -215,7 +215,7 @@ def search():
 """
     if dentists:
         for i, d in enumerate(dentists):
-            stars = ''.join(['<span class="material-symbols-outlined text-[#edc153] text-[16px]" style="font-variation-settings: \'FILL\' 1;">star</span>'] * int(d['rating']))
+            stars = ''.join(['<span class="material-symbols-outlined text-[#edc153] text-[16px]" style="font-variation-settings: \'FILL\' 1;">star</span>'] * int(d.get('rating') or 0))
             ins_badges = ''.join([f'<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide">{ins}</span>' for ins in d['insurance'].split(', ') if ins.strip()])
             
             html += f"""
@@ -227,7 +227,7 @@ def search():
                         </div>
                         <div class="flex items-center gap-0.5 bg-[#fffdf0] px-2 py-1 rounded-md border border-[#f5e6b3]">
                             {stars}
-                            <span class="font-bold ml-1 text-xs text-[#745800]">{d['rating']}</span>
+                            <span class="font-bold ml-1 text-xs text-[#745800]">{d.get('rating') if d.get('rating') is not None else 'New'}</span>
                         </div>
                     </div>
                     
@@ -352,13 +352,9 @@ def search():
                 if (lat && lng) {{
                     const popupContent = `
                         <div class="popup-header">
-                            <div style="color: #FFD700; font-size: 14px; margin-bottom: 4px; display: flex; gap: 2px; align-items: center;">
+                            <div style="color: #FFD700; font-size: 14px; margin-bottom: 4px; display: flex; gap: 2px; align-items: center;" title="View reviews on profile">
                                 <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">star</span>
-                                <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">star</span>
-                                <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">star</span>
-                                <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">star</span>
-                                <span class="material-symbols-outlined" style="font-size: 14px; font-variation-settings: 'FILL' 1;">star</span>
-                                <span style="color: #ffffff; margin-left: 4px; font-size: 12px; font-weight: bold; opacity: 0.9;">5.0</span>
+                                <span style="color: #ffffff; margin-left: 4px; font-size: 12px; font-weight: bold; opacity: 0.9;">${{d.rating || 'New'}}</span>
                             </div>
                             <a href="/dentist/${{d.id}}" style="text-decoration: none; color: inherit;"><h4 style="font-weight: 800; font-size: 16px; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; color: #006098; transition: color 0.2s;">${{d.practice_name}} <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">open_in_new</span></h4></a>
                             <p style="margin: 0; font-size: 13px; opacity: 0.9;">${{d.name}}</p>
@@ -942,12 +938,12 @@ def public_dentists():
     if search_query:
         # Simple case-insensitive search by name, practice_name, city, or state
         q = f"%{search_query}%"
-        cur.execute("SELECT id, name, practice_name, city, state FROM dentists WHERE name ILIKE %s OR practice_name ILIKE %s OR city ILIKE %s OR state ILIKE %s ORDER BY name ASC", (q, q, q, q))
+        cur.execute("SELECT id, name, practice_name, city, state, rating FROM dentists WHERE name ILIKE %s OR practice_name ILIKE %s OR city ILIKE %s OR state ILIKE %s ORDER BY name ASC", (q, q, q, q))
     else:
-        cur.execute("SELECT id, name, practice_name, city, state FROM dentists ORDER BY name ASC")
+        cur.execute("SELECT id, name, practice_name, city, state, rating FROM dentists ORDER BY name ASC")
     
     results = cur.fetchall()
-    dentists = [{"id": r[0], "name": r[1], "practice_name": r[2], "city": r[3], "state": r[4]} for r in results]
+    dentists = [{"id": r[0], "name": r[1], "practice_name": r[2], "city": r[3], "state": r[4], "rating": r[5]} for r in results]
     
     cur.close()
     conn.close()
@@ -1022,6 +1018,7 @@ def public_dentists():
                         <th class="py-4 px-6">Dentist Name</th>
                         <th class="py-4 px-6 hidden sm:table-cell">Practice</th>
                         <th class="py-4 px-6">Location</th>
+                        <th class="py-4 px-6 text-center">Rating</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-outline-variant">
@@ -1042,6 +1039,12 @@ def public_dentists():
                         </td>
                         <td class="py-4 px-6 hidden sm:table-cell text-on-surface-variant">{d["practice_name"] or "-"}</td>
                         <td class="py-4 px-6 text-on-surface-variant">{d["city"] or "-"}, {d["state"] or "-"}</td>
+                        <td class="py-4 px-6 text-center">
+                            <div class="flex items-center justify-center gap-1 bg-[#fffdf0] px-2 py-1 rounded-md border border-[#f5e6b3] inline-flex" title="View detailed reviews on profile">
+                                <span class="material-symbols-outlined text-[#edc153] text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                                <span class="font-bold text-xs text-[#745800]">{d['rating'] if d.get('rating') else 'New'}</span>
+                            </div>
+                        </td>
                     </tr>
 """
         
