@@ -72,12 +72,14 @@ def search():
     city = request.args.get('city', '')
     state = request.args.get('state', '')
     insurance = request.args.get('insurance', '')
+    min_rating = request.args.get('min_rating', '')
+    specialty = request.args.get('specialty', '')
     
     conn = get_db()
     cur = conn.cursor()
     
     query = """
-        SELECT DISTINCT d.id, d.name, d.practice_name, d.address, d.city, d.state, d.zip, d.phone, d.rating
+        SELECT DISTINCT d.id, d.name, d.practice_name, d.address, d.city, d.state, d.zip, d.phone, d.rating, d.services
         FROM dentists d
         LEFT JOIN dentist_insurance di ON d.id = di.dentist_id
         WHERE 1=1
@@ -93,8 +95,14 @@ def search():
     if insurance:
         query += " AND di.provider_id = %s"
         params.append(int(insurance))
+    if min_rating:
+        query += " AND d.rating >= %s"
+        params.append(float(min_rating))
+    if specialty:
+        query += " AND d.services ILIKE %s"
+        params.append(f"%{specialty}%")
     
-    query += " ORDER BY " + ("d.rating DESC" if any([city, state, insurance]) else "d.practice_name ASC")
+    query += " ORDER BY " + ("d.rating DESC" if any([city, state, insurance, min_rating, specialty]) else "d.practice_name ASC")
     
     cur.execute(query, params)
     results = cur.fetchall()
