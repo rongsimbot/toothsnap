@@ -1703,11 +1703,11 @@ def login():
       gtag('config', 'G-XXXXXXXXXX');
     </script>
 </head>
-<body class="bg-surface text-on-surface h-screen flex items-center justify-center">
+<body class="bg-surface text-on-surface flex flex-col min-h-screen">
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
+            <span class="font-bold text-2xl tracking-tight text-primary drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
             <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
@@ -1717,7 +1717,8 @@ def login():
             <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
         </div>
     </nav>
-    <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg border border-outline-variant">
+    <div class="flex-grow flex items-center justify-center p-6">
+        <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg border border-outline-variant">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold font-['Plus_Jakarta_Sans'] text-primary mb-2">Welcome Back</h1>
             <p class="text-on-surface-variant">Sign in to your ToothSnap account</p>
@@ -1745,6 +1746,7 @@ def login():
                 <span class="material-symbols-outlined text-[16px]">arrow_back</span> Back to Home
             </a>
         </div>
+    </div>
     </div>
 </body>
 </html>"""
@@ -1808,11 +1810,11 @@ def register():
       gtag('config', 'G-XXXXXXXXXX');
     </script>
 </head>
-<body class="bg-surface text-on-surface h-screen flex items-center justify-center">
+<body class="bg-surface text-on-surface flex flex-col min-h-screen">
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
+            <span class="font-bold text-2xl tracking-tight text-primary drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
             <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
@@ -1822,7 +1824,8 @@ def register():
             <a href="/dentist/register" class="hover:text-primary transition-colors">Dentist Registration</a>
         </div>
     </nav>
-    <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg border border-outline-variant">
+    <div class="flex-grow flex items-center justify-center p-6">
+        <div class="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg border border-outline-variant">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold font-['Plus_Jakarta_Sans'] text-primary mb-2">Create Account</h1>
             <p class="text-on-surface-variant">
@@ -1897,6 +1900,7 @@ def register():
                 <span class="material-symbols-outlined text-[16px]">arrow_back</span> Back to Home
             </a>
         </div>
+    </div>
     </div>
 </body>
 </html>"""
