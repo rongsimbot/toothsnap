@@ -2160,9 +2160,6 @@ def public_dentist(dentist_id):
 
 @app.route("/education")
 def education():
-    if "user_id" not in session:
-        return redirect("/register?prompt=education")
-        
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
