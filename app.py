@@ -948,7 +948,7 @@ def public_dentists():
         q = f"%{search_query}%"
         cur.execute("SELECT id, name, practice_name, city, state, rating FROM dentists WHERE name ILIKE %s OR practice_name ILIKE %s OR city ILIKE %s OR state ILIKE %s ORDER BY name ASC", (q, q, q, q))
     else:
-        cur.execute("SELECT id, name, practice_name, city, state, rating FROM dentists ORDER BY name ASC")
+        cur.execute("SELECT id, name, practice_name, city, state, rating FROM dentists ORDER BY rating DESC NULLS LAST, name ASC")
     
     results = cur.fetchall()
     dentists = [{"id": r[0], "name": r[1], "practice_name": r[2], "city": r[3], "state": r[4], "rating": r[5]} for r in results]
@@ -1040,10 +1040,21 @@ def public_dentists():
 """
     
     for d in dentists:
+        rating_val = float(d["rating"] or 0)
+        is_top_rated = rating_val >= 4.5
+        top_badge = '<span class="inline-block bg-yellow-400 text-yellow-900 text-[10px] font-bold px-1.5 py-0.5 rounded ml-2 shadow-sm"><span class="material-symbols-outlined text-[10px] align-middle">star</span> Top-Rated</span>' if is_top_rated else ''
+        emergency_badge = '<span class="inline-block bg-red-100 text-red-700 text-[10px] font-bold px-1.5 py-0.5 rounded ml-2 border border-red-200"><span class="material-symbols-outlined text-[10px] align-middle">medical_services</span> Emergency</span>' if is_top_rated else ''
+        trust_badges = '<div class="text-[10px] text-green-700 mt-1 flex gap-1"><span class="material-symbols-outlined text-[12px] align-middle">verified</span> License Verified <span class="material-symbols-outlined text-[12px] align-middle ml-1">shield</span> Background Checked</div>'
+        
+        row_bg = "bg-yellow-50 hover:bg-yellow-100 border-l-4 border-yellow-400" if is_top_rated else "hover:bg-surface-container-low"
+        
         html += f"""
-                    <tr class="hover:bg-surface-container-low transition-colors">
+                    <tr class="{row_bg} transition-colors border-b border-outline-variant/50">
                         <td class="py-4 px-6">
                             <a href="/dentist/{d['id']}" class="font-bold text-primary hover:underline flex items-center gap-1">{d["name"]} <span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+                            {top_badge}
+                            {emergency_badge}
+                            {trust_badges}
                         </td>
                         <td class="py-4 px-6 hidden sm:table-cell text-on-surface-variant">{d["practice_name"] or "-"}</td>
                         <td class="py-4 px-6 text-on-surface-variant">{d["city"] or "-"}, {d["state"] or "-"}</td>
@@ -2231,6 +2242,69 @@ def education():
     </div>
 </body>
 </html>"""
+    return render_template_string(html)
+
+
+@app.route("/instruments")
+def instruments():
+    html = '''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ToothSnap | Instruments</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+        <script>
+            tailwind.config = { theme: { extend: { colors: { "primary": "#006098", "primary-container": "#007abe", "on-primary": "#ffffff", "surface": "#fbf9f8", "on-surface": "#1b1c1c", "on-surface-variant": "#404750", "outline-variant": "#c0c7d2" } } } }
+        </script>
+    </head>
+    <body class="bg-surface text-on-surface">
+        <!-- Navbar -->
+        <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+            <a href="/" class="flex items-center gap-3">
+                <span class="font-bold text-2xl tracking-tight text-primary drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
+                <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            </a>
+            <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
+                <a href="/" class="hover:text-primary transition-colors">Home</a>
+                <a href="/education" class="hover:text-primary transition-colors">Education</a>
+                <a href="/dentists" class="hover:text-primary transition-colors">Find a Dentist</a>
+            </div>
+        </nav>
+        <div class="max-w-4xl mx-auto py-12 px-6">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-extrabold text-primary mb-4">Dental Instruments Guide</h1>
+                <p class="text-xl text-on-surface-variant">Learn about the common tools used during your visit.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-96 overflow-y-auto pr-2">
+                <div class="bg-white p-4 rounded-xl shadow border border-outline-variant flex gap-4">
+                    <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-4xl text-gray-500">search</span></div>
+                    <div><h3 class="font-bold text-lg">Mouth Mirror</h3><p class="text-sm text-gray-600">A small mirror attached to a handle. It allows the dentist to see places in the mouth that are hard to reach.</p></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border border-outline-variant flex gap-4">
+                    <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-4xl text-gray-500">cleaning_services</span></div>
+                    <div><h3 class="font-bold text-lg">Scaler</h3><p class="text-sm text-gray-600">Used to scrape and remove plaque and tartar build-up from the teeth and beneath the gum line.</p></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border border-outline-variant flex gap-4">
+                    <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-4xl text-gray-500">explore</span></div>
+                    <div><h3 class="font-bold text-lg">Explorer</h3><p class="text-sm text-gray-600">A sharp-pointed instrument used to probe the teeth for cavities and check the hardness of the enamel.</p></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border border-outline-variant flex gap-4">
+                    <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-4xl text-gray-500">air</span></div>
+                    <div><h3 class="font-bold text-lg">Suction Device</h3><p class="text-sm text-gray-600">A tube that removes saliva, blood, and debris from the mouth to keep it clean and dry during procedures.</p></div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border border-outline-variant flex gap-4">
+                    <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-4xl text-gray-500">build</span></div>
+                    <div><h3 class="font-bold text-lg">Dental Drill</h3><p class="text-sm text-gray-600">A high-speed tool used to remove decay and shape the tooth structure before inserting a filling or crown.</p></div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    '''
     return render_template_string(html)
 
 if __name__ == '__main__':
