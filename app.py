@@ -642,7 +642,7 @@ def product_detail(product_id):
                 body: JSON.stringify({{
                     product_id: '{product.get('id')}',
                     variant_id: '{variant_id}',
-                    title: '{product.get('title', 'Product').replace("'", "\\'")}',
+                    title: '{product.get('title', 'Product').replace(chr(39), '')}',
                     price: '{price}',
                     quantity: parseInt(quantity),
                     image: '{image_url}'
@@ -1229,6 +1229,19 @@ def dentist_register():
                 </div>
             </div>
 
+            <!-- CAPTCHA Security Check -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center mt-4">
+                <label class="block text-sm font-bold text-primary mb-2 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">verified_user</span> Human Verification
+                </label>
+                <div class="flex items-center justify-center gap-4">
+                    <span class="text-lg font-bold bg-white px-4 py-2 rounded shadow-sm border border-outline-variant" id="captcha-question">Loading...</span>
+                    <span class="text-lg font-bold">=</span>
+                    <input type="number" id="captcha-answer" required class="w-24 text-center rounded-lg border-outline-variant focus:border-primary focus:ring-primary h-12" placeholder="?">
+                </div>
+                <p class="text-xs text-on-surface-variant mt-3 italic">Please solve this simple math problem to prove you are human.</p>
+            </div>
+
             <div class="mt-4 flex justify-end gap-4 border-t border-outline-variant pt-6">
                 <a href="/dentists" class="px-6 py-3 font-bold text-on-surface-variant hover:text-on-surface transition-colors">Cancel</a>
                 <button type="submit" class="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl transition-all">
@@ -1237,6 +1250,33 @@ def dentist_register():
             </div>
         </form>
     </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {{
+            const qElem = document.getElementById("captcha-question");
+            const aElem = document.getElementById("captcha-answer");
+            const form = qElem.closest("form");
+            
+            let expected = 0;
+            function gen() {{
+                const n1 = Math.floor(Math.random() * 10) + 1;
+                const n2 = Math.floor(Math.random() * 10) + 1;
+                expected = n1 + n2;
+                qElem.innerText = n1 + " + " + n2;
+                aElem.value = "";
+            }}
+            
+            gen();
+            
+            form.addEventListener("submit", (e) => {{
+                if (parseInt(aElem.value) !== expected) {{
+                    e.preventDefault();
+                    alert("CAPTCHA incorrect. Please try the math problem again to prove you are human.");
+                    gen();
+                }}
+            }});
+        }});
+    </script>
 </body>
 </html>"""
     return render_template_string(html)
@@ -1805,8 +1845,49 @@ def register():
                 <label class="block text-sm font-bold mb-2">Password</label>
                 <input type="password" name="password" required class="w-full rounded-lg border-outline-variant focus:border-primary px-4 py-2">
             </div>
+            
+            <!-- CAPTCHA Security Check -->
+            <div class="bg-gray-50 border border-outline-variant rounded-lg p-4 my-2 text-center">
+                <label class="block text-sm font-bold text-primary mb-2 flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">security</span> Anti-Bot Check
+                </label>
+                <div class="flex items-center justify-center gap-2">
+                    <span class="font-bold bg-white px-3 py-1 rounded border border-outline-variant" id="user-captcha-q"></span>
+                    <span class="font-bold">=</span>
+                    <input type="number" id="user-captcha-a" required class="w-20 text-center rounded border-outline-variant focus:border-primary px-2 py-1 h-10" placeholder="?">
+                </div>
+            </div>
+            
             <button type="submit" class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold hover:bg-primary-container transition-colors mt-2">Register</button>
         </form>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {{
+                const qElem = document.getElementById("user-captcha-q");
+                const aElem = document.getElementById("user-captcha-a");
+                const form = qElem.closest("form");
+                
+                let expected = 0;
+                function gen() {{
+                    const n1 = Math.floor(Math.random() * 5) + 1;
+                    const n2 = Math.floor(Math.random() * 5) + 1;
+                    expected = n1 + n2;
+                    qElem.innerText = n1 + " + " + n2;
+                    aElem.value = "";
+                }}
+                
+                if(qElem && aElem) {{
+                    gen();
+                    form.addEventListener("submit", (e) => {{
+                        if (parseInt(aElem.value) !== expected) {{
+                            e.preventDefault();
+                            alert("Anti-bot check failed. Please answer the math question.");
+                            gen();
+                        }}
+                    }});
+                }}
+            }});
+        </script>
         
         <p class="text-center text-sm text-on-surface-variant mt-6">
             Already have an account? <a href="/login" class="text-primary font-bold hover:underline">Sign in here</a>
