@@ -196,8 +196,8 @@ def search():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -445,8 +445,8 @@ def products():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -594,8 +594,8 @@ def product_detail(product_id):
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -872,8 +872,8 @@ def not_found(error):
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -915,8 +915,8 @@ def internal_error(error):
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -992,8 +992,8 @@ def public_dentists():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -1150,8 +1150,8 @@ def dentist_register():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -1331,8 +1331,8 @@ def admin_dentists():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -1501,8 +1501,8 @@ def admin_edit_dentist(dentist_id):
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -1707,8 +1707,8 @@ def login():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-primary drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -1814,8 +1814,8 @@ def register():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-primary drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -1945,8 +1945,8 @@ def dashboard():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -2165,8 +2165,8 @@ def public_dentist(dentist_id):
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
@@ -2262,8 +2262,8 @@ def education():
     <!-- Navbar -->
     <nav class="bg-surface-container-lowest border-b border-outline-variant px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <a href="/" class="flex items-center gap-3">
-            <span class="font-bold text-2xl tracking-tight text-white drop-shadow-md font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
-            <span class="material-symbols-outlined text-[#006098] text-[32px] font-medium" style="font-variation-settings: 'FILL' 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">dentistry</span>
+            <span class="material-symbols-outlined text-black text-[32px] font-medium" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+            <span class="font-bold text-2xl tracking-tight text-black font-['Plus_Jakarta_Sans']">Tooth<span class="text-[#006098]">Snap</span></span>
         </a>
         <div class="hidden md:flex gap-8 font-semibold text-[15px] text-on-surface-variant">
             <a href="/" class="hover:text-primary transition-colors">Home</a>
